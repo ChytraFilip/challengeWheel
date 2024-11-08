@@ -1,6 +1,6 @@
-import React from 'react';
-import { useWheelStore } from '../store/wheelStore';
-import { SpinType } from '../types/wheel';
+import * as React from "react";
+import { useWheelStore } from "../store/wheelStore";
+import { SpinType } from "../types/wheel";
 
 export const DebugPanel: React.FC = () => {
   const {
@@ -13,10 +13,11 @@ export const DebugPanel: React.FC = () => {
     donationAmount,
     setFollowCount,
     setSubCount,
-    setDonationAmount
+    setDonationAmount,
+    unlockChallenges, // Import the throttled unlockChallenges function
   } = useWheelStore();
 
-  const spinTypes: SpinType[] = ['follow', 'sub', 'donation'];
+  const spinTypes: SpinType[] = ["follow", "sub", "donation"];
 
   if (!debugMode) {
     return (
@@ -31,14 +32,14 @@ export const DebugPanel: React.FC = () => {
 
   const getSpinTypeColor = (type: SpinType) => {
     switch (type) {
-      case 'follow':
-        return 'bg-blue-500';
-      case 'sub':
-        return 'bg-green-500';
-      case 'donation':
-        return 'bg-yellow-500';
+      case "follow":
+        return "bg-blue-500";
+      case "sub":
+        return "bg-green-500";
+      case "donation":
+        return "bg-yellow-500";
       default:
-        return 'bg-gray-600';
+        return "bg-gray-600";
     }
   };
 
@@ -53,7 +54,7 @@ export const DebugPanel: React.FC = () => {
                 key={type}
                 onClick={() => setSpinType(type)}
                 className={`px-3 py-1 rounded flex-1 ${
-                  spinType === type ? getSpinTypeColor(type) : 'bg-gray-600'
+                  spinType === type ? getSpinTypeColor(type) : "bg-gray-600"
                 }`}
               >
                 {type}
@@ -69,7 +70,10 @@ export const DebugPanel: React.FC = () => {
             min="0"
             max="200"
             value={followCount}
-            onChange={(e) => setFollowCount(Number(e.target.value))}
+            onChange={(e) => {
+              setFollowCount(Number(e.target.value));
+              unlockChallenges(); // Invoke unlockChallenges onChange
+            }}
             className="w-full accent-blue-500"
           />
         </div>
@@ -81,7 +85,10 @@ export const DebugPanel: React.FC = () => {
             min="0"
             max="200"
             value={subCount}
-            onChange={(e) => setSubCount(Number(e.target.value))}
+            onChange={(e) => {
+              setSubCount(Number(e.target.value));
+              unlockChallenges(); // Invoke unlockChallenges onChange
+            }}
             className="w-full accent-green-500"
           />
         </div>
@@ -93,11 +100,14 @@ export const DebugPanel: React.FC = () => {
             min="0"
             max="200"
             value={donationAmount}
-            onChange={(e) => setDonationAmount(Number(e.target.value))}
+            onChange={(e) => {
+              setDonationAmount(Number(e.target.value));
+              unlockChallenges(); // Invoke unlockChallenges onChange
+            }}
             className="w-full accent-yellow-500"
           />
         </div>
-        
+
         <button
           onClick={toggleDebugMode}
           className="bg-gray-600 px-3 py-1 rounded hover:bg-gray-500"

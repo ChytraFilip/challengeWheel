@@ -1,103 +1,103 @@
-import { create } from 'zustand';
-import { WheelState, SpinType, Challenge } from '../types/wheel';
-import { challenges } from '../data/challenges';
+import { create } from "zustand";
+import { WheelState, ChallengeTier } from "../types/wheel";
+import { challenges as initialChallenges } from "../data/challenges";
+import throttle from "lodash.throttle"; // Import throttle from lodash
 
-const isUnlockableForSpinType = (challenge: Challenge, spinType: SpinType): boolean => {
-  switch (spinType) {
-    case 'follow':
-      return ['common', 'uncommon', 'rare'].includes(challenge.tier);
-    case 'sub':
-      return ['common', 'uncommon', 'rare', 'epic', 'legendary'].includes(challenge.tier);
-    case 'donation':
-      return true;
-    default:
-      return false;
-  }
-};
+export const useWheelStore = create<WheelState>((set, get) => {
+  // Create a throttled version of unlockChallenges with a 100ms delay
+  const throttledUnlockChallenges = throttle(() => {
+    const { spinType, followCount, subCount, donationAmount, challenges } =
+      get();
 
-const getUnlockedCount = (tier: string, total: number, count: number, multiplier: number = 1): number => {
-  const unlockedCount = Math.floor(count / multiplier);
-  return Math.min(unlockedCount, total);
-};
+    // Define allowed tiers based on spinType
+    let allowedTiers: ChallengeTier[] = ["common", "uncommon", "rare"];
+    if (spinType === "sub" || spinType === "donation") {
+      allowedTiers = [...allowedTiers, "epic", "legendary"];
+    }
+    if (spinType === "donation") {
+      allowedTiers = [...allowedTiers, "mythic"];
+    }
 
-export const useWheelStore = create<WheelState>((set, get) => ({
-  challenges,
-  isSpinning: false,
-  selectedChallenge: null,
-  debugMode: false,
-  spinType: 'follow',
-  followCount: 0,
-  subCount: 0,
-  donationAmount: 0,
-  setSpinning: (spinning) => set({ isSpinning: spinning }),
-  setSelectedChallenge: (challenge) => set({ selectedChallenge: challenge }),
-  toggleDebugMode: () => set((state) => ({ debugMode: !state.debugMode })),
-  setSpinType: (type) => {
-    set({ spinType: type });
-    get().unlockChallenges();
-  },
-  setFollowCount: (count) => {
-    set({ followCount: count });
-    get().unlockChallenges();
-  },
-  setSubCount: (count) => {
-    set({ subCount: count });
-    get().unlockChallenges();
-  },
-  setDonationAmount: (amount) => {
-    set({ donationAmount: amount });
-    get().unlockChallenges();
-  },
-  closeModal: () => set({ selectedChallenge: null }),
-  unlockChallenges: () => set((state) => {
-    const challengesByTier = {
-      uncommon: challenges.filter(c => c.tier === 'uncommon'),
-      rare: challenges.filter(c => c.tier === 'rare'),
-      epic: challenges.filter(c => c.tier === 'epic'),
-      legendary: challenges.filter(c => c.tier === 'legendary'),
-      mythic: challenges.filter(c => c.tier === 'mythic')
+    // Calculate unlocked counts per tier based on conditions
+    const unlockCounts: Record<ChallengeTier, number> = {
+      common: allowedTiers.includes("common") ? 36 : 0, // All common challenges unlocked
+      uncommon: allowedTiers.includes("uncommon")
+        ? Math.min(followCount, 26)
+        : 0, // 1 per follow up to 26
+      rare: allowedTiers.includes("rare")
+        ? Math.min(Math.floor(followCount / 10), 18)
+        : 0, // 1 per 10 follows up to 18
+      epic: allowedTiers.includes("epic") ? Math.min(subCount, 12) : 0, // 1 per sub up to 12
+      legendary: allowedTiers.includes("legendary")
+        ? Math.min(Math.floor(subCount / 10), 8)
+        : 0, // 1 per 10 subs up to 8
+      mythic: allowedTiers.includes("mythic")
+        ? Math.min(Math.floor(donationAmount / 25), 4)
+        : 0, // 1 per $25 donations, up to 4
     };
 
-    // Calculate unlocked counts for each tier
-    const uncommonUnlocked = getUnlockedCount('uncommon', challengesByTier.uncommon.length, state.followCount);
-    const rareUnlocked = getUnlockedCount('rare', challengesByTier.rare.length, state.followCount, 10);
-    const epicUnlocked = getUnlockedCount('epic', challengesByTier.epic.length, state.subCount);
-    const legendaryUnlocked = getUnlockedCount('legendary', challengesByTier.legendary.length, state.subCount, 10);
-    const mythicUnlocked = getUnlockedCount('mythic', challengesByTier.mythic.length, state.donationAmount, 25);
-
-    return {
-      challenges: state.challenges.map(challenge => {
-        if (!isUnlockableForSpinType(challenge, state.spinType)) {
-          return { ...challenge, isLocked: true };
-        }
-
-        let isLocked = true;
-        const tierChallenges = challengesByTier[challenge.tier as keyof typeof challengesByTier] || [];
-        const challengeIndexInTier = tierChallenges.findIndex(c => c.id === challenge.id);
-
-        switch (challenge.tier) {
-          case 'common':
-            isLocked = false;
-            break;
-          case 'uncommon':
-            isLocked = challengeIndexInTier >= uncommonUnlocked;
-            break;
-          case 'rare':
-            isLocked = challengeIndexInTier >= rareUnlocked;
-            break;
-          case 'epic':
-            isLocked = challengeIndexInTier >= epicUnlocked;
-            break;
-          case 'legendary':
-            isLocked = challengeIndexInTier >= legendaryUnlocked;
-            break;
-          case 'mythic':
-            isLocked = challengeIndexInTier >= mythicUnlocked;
-            break;
-        }
-
-        return { ...challenge, isLocked };
-      })
+    // Initialize a map to keep track of unlocked counts per tier
+    const unlockedCounts: Record<ChallengeTier, number> = {
+      common: 0,
+      uncommon: 0,
+      rare: 0,
+      epic: 0,
+      legendary: 0,
+      mythic: 0,
     };
-  }),
-}));
+
+    // Map through challenges and unlock based on unlockCounts and allowedTiers
+    const updatedChallenges = challenges.map((challenge) => {
+      const tier = challenge.tier;
+
+      if (!allowedTiers.includes(tier)) {
+        // Ensure challenges from non-allowed tiers are locked
+        return { ...challenge, isLocked: true };
+      }
+
+      if (unlockCounts[tier] > unlockedCounts[tier]) {
+        unlockedCounts[tier] += 1;
+        return { ...challenge, isLocked: false };
+      } else {
+        return { ...challenge, isLocked: true };
+      }
+    });
+
+    set({ challenges: updatedChallenges });
+  }, 100); // 100ms throttle delay
+
+  return {
+    challenges: initialChallenges, // Use the transformed challenges
+    isSpinning: false,
+    selectedChallenge: null,
+    debugMode: false,
+    spinType: "follow",
+    followCount: 0,
+    subCount: 0,
+    donationAmount: 0,
+    currentRotation: 0, // Initialize rotation state
+    setSpinning: (spinning) => set({ isSpinning: spinning }),
+    setSelectedChallenge: (challenge) => set({ selectedChallenge: challenge }),
+    toggleDebugMode: () => set((state) => ({ debugMode: !state.debugMode })),
+    setSpinType: (type) => {
+      set({ spinType: type });
+      throttledUnlockChallenges();
+    },
+    setFollowCount: (count) => {
+      set({ followCount: count });
+      throttledUnlockChallenges();
+    },
+    setSubCount: (count) => {
+      set({ subCount: count });
+      throttledUnlockChallenges();
+    },
+    setDonationAmount: (amount) => {
+      set({ donationAmount: amount });
+      throttledUnlockChallenges();
+    },
+    setCurrentRotation: (rotation: number) =>
+      set({ currentRotation: rotation }),
+    closeModal: () => set({ selectedChallenge: null }),
+    unlockChallenges: throttledUnlockChallenges, // Expose the throttled function
+  };
+});

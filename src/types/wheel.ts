@@ -1,17 +1,12 @@
-export type ChallengeTier = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary' | 'mythic';
-export type SpinType = 'follow' | 'sub' | 'donation';
+import {
+  Challenge,
+  ChallengeTier,
+  SpinType,
+  WheelState as WheelStateType,
+} from "./challengeTypes";
 
-export interface Challenge {
-  id: number;
-  number: number;
-  tier: ChallengeTier;
-  isLocked: boolean;
-  color: string;
-  unlockCondition: {
-    type: SpinType;
-    threshold: number;
-  };
-}
+export type WheelStateAlias = WheelStateType;
+export type { Challenge, ChallengeTier, SpinType };
 
 export interface WheelState {
   challenges: Challenge[];
@@ -31,4 +26,6 @@ export interface WheelState {
   setDonationAmount: (amount: number) => void;
   unlockChallenges: () => void;
   closeModal: () => void;
+  currentRotation: number;
+  setCurrentRotation: (rotation: number) => void;
 }
