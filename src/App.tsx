@@ -4,7 +4,7 @@ import { ResultModal } from "./components/ResultModal";
 
 function App() {
   return (
-    <div className="h-screen w-screen flex items-center justify-center overflow-hidden">
+    <div className="w-full h-full flex items-center justify-center overflow-hidden">
       <Wheel />
       <DebugPanel />
       <ResultModal />

@@ -94,12 +94,12 @@ export const Wheel: React.FC = () => {
 
   return (
     <div
-      className={`w-full h-full flex flex-col items-center justify-center px-8 py-12 bg-gradient-to-br ${getSpinTypeGradient()}`}
+      className={`w-full h-full relative flex flex-col items-center justify-between px-8 py-12 bg-gradient-to-br ${getSpinTypeGradient()}`}
     >
-      <h1 className="text-6xl font-bold text-white mb-16 text-center">
+      <h1 className="text-6xl font-bold text-white text-center">
         {getSpinTypeText()}
       </h1>
-      <div className="relative scale-[120%] translate-y-[45%] w-[700px] h-[700px] md:scale-[100%] md:translate-y-0">
+      <div className="absolute bottom-0 scale-1 translate-y-[40%] w-[750px] h-[750px] md:static md:translate-y-0">
         <div className="absolute left-1/2 transform -top-[8%] rotate-90 z-10 flex flex-col items-center">
           <PaperAirplaneIcon className="text-white left-1/2 transform -translate-y-1/2 translate-x-4 w-20 h-20 drop-shadow-lg absolute" />
         </div>
