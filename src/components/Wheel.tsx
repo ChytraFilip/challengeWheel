@@ -99,7 +99,7 @@ export const Wheel: React.FC = () => {
       <h1 className="text-6xl font-bold text-white text-center">
         {getSpinTypeText()}
       </h1>
-      <div className="absolute bottom-0 scale-1 translate-y-[40%] w-[750px] h-[750px] md:static md:translate-y-0">
+      <div className="absolute bottom-0 scale-1 translate-y-[40%] w-[750px] h-[750px] sm:translate-y-[35%] md:static md:translate-y-0">
         <div className="absolute left-1/2 transform -top-[8%] rotate-90 z-10 flex flex-col items-center">
           <PaperAirplaneIcon className="text-white left-1/2 transform -translate-y-1/2 translate-x-4 w-20 h-20 drop-shadow-lg absolute" />
         </div>
