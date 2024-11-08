@@ -56,7 +56,7 @@ export const ResultModal: React.FC = () => {
                   {selectedChallenge.title}
                 </p>
                 {selectedChallenge.type && (
-                  <span className="absolute bottom-0 translate-y-2.5 inline-block bg-zinc-200 text-gray-800 px-1.5 py-0.5 rounded-full text-xs font-medium">
+                  <span className="absolute bottom-0 translate-y-2.5 inline-block bg-zinc-300 text-white px-1.5 py-0.5 rounded-full text-xs font-medium">
                     {selectedChallenge.type}
                   </span>
                 )}
