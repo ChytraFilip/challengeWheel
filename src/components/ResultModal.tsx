@@ -22,8 +22,8 @@ export const ResultModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full relative mx-4">
+    <div className="fixed inset-0 drop-shadow-2xl bg-black bg-opacity-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full relative mx-4 ">
         <button
           onClick={closeModal}
           className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
@@ -51,12 +51,12 @@ export const ResultModal: React.FC = () => {
                 Challenge #{selectedChallenge.number}
               </h2>
 
-              <div className="relative py-4 px-2 flex flex-col items-center rounded-lg border-spacing-1 border-2 border-zinc-200 bg-">
-                <p className="text-2xl font-medium text-gray-900 leading-tight mb-1">
+              <div className="bg-white relative py-4 px-2 flex flex-col drop-shadow-[0_8px_8px_rgba(0,0,0,0.45)] items-center rounded-lg border-[1px] border-[#bcbcc572]">
+                <p className="text-2xl font-medium text-gray-900 leading-tight mb-1 whitespace-normal">
                   {selectedChallenge.title}
                 </p>
                 {selectedChallenge.type && (
-                  <span className="absolute bottom-0 translate-y-2.5 inline-block bg-zinc-300 text-white px-1.5 py-0.5 rounded-full text-xs font-medium">
+                  <span className="absolute bottom-0 translate-y-2.5 inline-block bg-[#bcbcc5] text-white uppercase px-1.5 py-0.5 rounded-full text-xs font-medium">
                     {selectedChallenge.type}
                   </span>
                 )}

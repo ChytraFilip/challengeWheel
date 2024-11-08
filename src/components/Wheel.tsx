@@ -82,11 +82,11 @@ export const Wheel: React.FC = () => {
   const getSpinTypeText = () => {
     switch (spinType) {
       case "follow":
-        return "New Follower Fortune Wheel";
+        return "New Follower!";
       case "sub":
-        return "New Subscriber Fortune Wheel";
+        return "New Subscriber!";
       case "donation":
-        return "Donation Fortune Wheel";
+        return "Donation!";
       default:
         return "Challenges";
     }
@@ -94,31 +94,34 @@ export const Wheel: React.FC = () => {
 
   return (
     <div
-      className={`w-full h-full flex flex-col items-center justify-center bg-gradient-to-br ${getSpinTypeGradient()}`}
+      className={`w-full h-full flex flex-col items-center justify-center px-8 py-12 bg-gradient-to-br ${getSpinTypeGradient()}`}
     >
-      <h1 className="text-6xl font-bold text-white mb-16">
+      <h1 className="text-6xl font-bold text-white mb-16 text-center">
         {getSpinTypeText()}
       </h1>
-      <div className="relative w-[700px] h-[700px]">
-        <div className="absolute left-1/2 transform -translate-y-1/2 -top-8 rotate-90 z-10 flex flex-col items-center">
+      <div className="relative scale-[120%] translate-y-[45%] w-[700px] h-[700px] md:scale-[100%] md:translate-y-0">
+        <div className="absolute left-1/2 transform -top-[8%] rotate-90 z-10 flex flex-col items-center">
           <PaperAirplaneIcon className="text-white left-1/2 transform -translate-y-1/2 translate-x-4 w-20 h-20 drop-shadow-lg absolute" />
         </div>
 
-        <motion.div
-          className="absolute w-full h-full"
-          animate={controls}
-          initial={{ rotate: 0 }}
+        <svg
+          viewBox="0 0 100 100"
+          className="w-full h-full drop-shadow-[0_0px_8px_rgba(0,0,0,0.3)]"
         >
-          <svg viewBox="-5 -5 110 110" className="w-full h-full">
-            <circle
-              cx="50"
-              cy="50"
-              r="49"
-              fill="none"
-              stroke="rgba(255,255,255,0.5)"
-              strokeWidth="0"
-            />
+          <circle
+            cx="50"
+            cy="50"
+            r="50"
+            fill="none"
+            stroke="rgba(255,255,255,0.5)"
+            strokeWidth="0"
+          />
 
+          <motion.g
+            animate={controls}
+            initial={{ rotate: 0 }}
+            style={{ transformOrigin: "50px 50px" }}
+          >
             {challenges.map((challenge, index) => {
               const rotation = index * segmentAngle;
               const textAngle = rotation + segmentAngle / 2;
@@ -135,8 +138,8 @@ export const Wheel: React.FC = () => {
                       50 + Math.sin((segmentAngle * Math.PI) / 180) * 50
                     } ${50 - Math.cos((segmentAngle * Math.PI) / 180) * 50} Z`}
                     fill={challenge.isLocked ? "#394151" : challenge.color}
-                    stroke="rgba(255,255,255,0.1)"
-                    strokeWidth="0.25"
+                    stroke="rgba(255,255,255,1)"
+                    strokeWidth="0.05"
                     transform={`rotate(${rotation} 50 50)`}
                   />
                   <text
@@ -153,8 +156,8 @@ export const Wheel: React.FC = () => {
                 </g>
               );
             })}
-          </svg>
-        </motion.div>
+          </motion.g>
+        </svg>
 
         <button
           onClick={() => !isSpinning && spinWheel()}
