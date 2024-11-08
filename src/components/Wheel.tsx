@@ -1,6 +1,6 @@
 import { motion, useAnimation } from "framer-motion";
 import { useWheelStore } from "../store/wheelStore";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
+import { PaperAirplaneIcon } from "@heroicons/react/24/solid";
 import confetti from "canvas-confetti";
 
 const SPIN_DURATION = 5;
@@ -69,24 +69,39 @@ export const Wheel: React.FC = () => {
   const getSpinTypeGradient = () => {
     switch (spinType) {
       case "follow":
-        return "from-blue-500 via-purple-500 to-pink-500";
-      case "sub":
         return "from-green-400 via-teal-500 to-blue-600";
+      case "sub":
+        return "from-purple-500 via-pink-500 to-yellow-500";
       case "donation":
-        return "from-yellow-400 via-red-500 to-pink-500";
+        return "from-yellow-500 via-red-500 to-pink-500";
       default:
         return "from-gray-400 via-gray-500 to-gray-600";
     }
   };
 
+  const getSpinTypeText = () => {
+    switch (spinType) {
+      case "follow":
+        return "New Follower Fortune Wheel";
+      case "sub":
+        return "New Subscriber Fortune Wheel";
+      case "donation":
+        return "Donation Fortune Wheel";
+      default:
+        return "Challenges";
+    }
+  };
+
   return (
     <div
-      className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${getSpinTypeGradient()}`}
+      className={`w-full h-full flex flex-col items-center justify-center bg-gradient-to-br ${getSpinTypeGradient()}`}
     >
-      <div className="relative w-[600px] h-[600px]">
-        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10 flex flex-col items-center">
-          <ChevronDownIcon className="text-white w-16 h-16 drop-shadow-lg" />
-          <div className="w-4 h-4 bg-white rounded-full shadow-lg" />
+      <h1 className="text-6xl font-bold text-white mb-16">
+        {getSpinTypeText()}
+      </h1>
+      <div className="relative w-[700px] h-[700px]">
+        <div className="absolute left-1/2 transform -translate-y-1/2 -top-8 rotate-90 z-10 flex flex-col items-center">
+          <PaperAirplaneIcon className="text-white left-1/2 transform -translate-y-1/2 w-20 h-20 drop-shadow-lg absolute" />
         </div>
 
         <motion.div
@@ -94,14 +109,14 @@ export const Wheel: React.FC = () => {
           animate={controls}
           initial={{ rotate: 0 }}
         >
-          <svg viewBox="0 0 100 100" className="w-full h-full">
+          <svg viewBox="-5 -5 110 110" className="w-full h-full">
             <circle
               cx="50"
               cy="50"
               r="49"
               fill="none"
-              stroke="rgba(255,255,255,0.1)"
-              strokeWidth="0.25"
+              stroke="rgba(255,255,255,0.5)"
+              strokeWidth="0"
             />
 
             {challenges.map((challenge, index) => {
@@ -119,7 +134,7 @@ export const Wheel: React.FC = () => {
                     d={`M 50 50 L 50 0 A 50 50 0 0 1 ${
                       50 + Math.sin((segmentAngle * Math.PI) / 180) * 50
                     } ${50 - Math.cos((segmentAngle * Math.PI) / 180) * 50} Z`}
-                    fill={challenge.isLocked ? "#374151" : challenge.color}
+                    fill={challenge.isLocked ? "#394151" : challenge.color}
                     stroke="rgba(255,255,255,0.1)"
                     strokeWidth="0.25"
                     transform={`rotate(${rotation} 50 50)`}

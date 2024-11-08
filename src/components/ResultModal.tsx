@@ -45,14 +45,14 @@ export const ResultModal: React.FC = () => {
           ) : (
             <>
               <h2
-                className="text-4xl font-extrabold mb-6"
+                className="text-4xl font-extrabold mb-6 uppercase"
                 style={{ color: selectedChallenge.color }}
               >
                 Challenge #{selectedChallenge.number}
               </h2>
 
               <div className="relative py-4 px-2 flex flex-col items-center rounded-lg border-spacing-1 border-2 border-zinc-200 bg-">
-                <p className="text-2xl font-medium text-gray-900 leading-tight capitalize ">
+                <p className="text-2xl font-medium text-gray-900 leading-tight mb-1">
                   {selectedChallenge.title}
                 </p>
                 {selectedChallenge.type && (

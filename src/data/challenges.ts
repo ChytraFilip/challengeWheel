@@ -7,12 +7,12 @@ import {
 } from "../types/challengeTypes";
 
 const TIER_COLORS: Record<ChallengeTier, string> = {
-  common: "#4CAF50", // Green
-  uncommon: "#2196F3", // Blue
-  rare: "#9C27B0", // Purple
-  epic: "#FF9800", // Orange
-  legendary: "#F44336", // Red
-  mythic: "#FFD700", // Gold
+  common: "#676b75", // Gray
+  uncommon: "#27ae60", // Green
+  rare: "#2471A3", // Blue
+  epic: "#7d3c98", // Purple
+  legendary: "#f5b118", // Gold
+  mythic: "#e53e3a", // Red
 };
 
 // Utility to generate unique IDs

@@ -74,7 +74,7 @@ export const DebugPanel: React.FC = () => {
               setFollowCount(Number(e.target.value));
               unlockChallenges(); // Invoke unlockChallenges onChange
             }}
-            className="w-full accent-blue-500"
+            className="w-full accent-blue-400"
           />
         </div>
 
