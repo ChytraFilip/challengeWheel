@@ -101,7 +101,7 @@ export const Wheel: React.FC = () => {
       </h1>
       <div className="relative w-[700px] h-[700px]">
         <div className="absolute left-1/2 transform -translate-y-1/2 -top-8 rotate-90 z-10 flex flex-col items-center">
-          <PaperAirplaneIcon className="text-white left-1/2 transform -translate-y-1/2 w-20 h-20 drop-shadow-lg absolute" />
+          <PaperAirplaneIcon className="text-white left-1/2 transform -translate-y-1/2 translate-x-4 w-20 h-20 drop-shadow-lg absolute" />
         </div>
 
         <motion.div
